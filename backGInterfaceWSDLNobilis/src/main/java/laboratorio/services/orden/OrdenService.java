@@ -63,7 +63,7 @@ public class OrdenService {
         List<Estudio> estudiosValidatedAndSaved = this.assingValidateAndSaveEstudios(estudios);
 
         Orden orden= new Orden(this.assingValidateAndSavePacientes(Collections.singletonList(new Paciente(Long.parseLong(dni),
-                                nombre, apellido, checkGenero(genero), fechaDeNacimiento)), origen).get(0), origen, estudiosValidatedAndSaved, observaciones, 
+                                nombre, apellido, checkGenero(genero), this.checkDate(fechaDeNacimiento))), origen).get(0), origen, estudiosValidatedAndSaved, observaciones, 
                                 Estado.EN_PROCESO, derivacion, isUrgencia(urgente), new Resultado(), 0);             
         return(this.ordenRepository.save(orden));
         }catch(Exception ex){
@@ -225,14 +225,35 @@ public class OrdenService {
             throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_EN_EL_FORMATO_DE_LA_FECHA_DEL_EXCEL));
         }
     }
-    private String checkDate(String fechaExcel) throws BadResquestException{
-        String formatoFecha = "dd/MM/yyyy";
-         boolean cumpleFormato = verificarFormatoFecha(fechaExcel,formatoFecha);
+    private String checkDate(String fechaExcel) throws BadResquestException, ParseException{
+        System.err.println("11111111111111111111111111111111111111111111111");
+        boolean cumpleFormato = verificarFormatoFecha(fechaExcel,"dd/MM/yyyy");
         if (cumpleFormato == false) {
+            boolean cumpleFormatov2 = verificarFormatoFecha(fechaExcel,"yyyy-MM-dd");
+            if(cumpleFormatov2 == false){
             throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_EN_EL_FORMATO_DE_LA_FECHA_DEL_EXCEL));
+            }else{
+                System.err.println("22222222222222222222222222222222222222222222222222");
+                return this.fixDate(fechaExcel);
+            }
         } 
             return fechaExcel;
     }
+    private String fixDate(String date) throws ParseException, BadResquestException{
+        try{
+        SimpleDateFormat formatoFechaEntrada = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatoFechaSalida = new SimpleDateFormat("dd/MM/yyyy");
+        Date fecha = formatoFechaEntrada.parse(date);
+        String fechaDeNacimientoFormateada = formatoFechaSalida.format(fecha);
+        System.err.println("33333333333333333333333333333333333333333333333333");
+        System.err.println(fechaDeNacimientoFormateada);
+        return fechaDeNacimientoFormateada;
+        }catch(Exception e){
+            throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_EN_EL_CORRECTOR_AUTOMATICO_DE_FECHA));
+        }
+        
+    }
+    
     public static boolean verificarFormatoFecha(String fechaString, String formatoFecha) {
             SimpleDateFormat sdf = new SimpleDateFormat(formatoFecha);
             sdf.setLenient(false); // Esto hace que el formato sea estricto

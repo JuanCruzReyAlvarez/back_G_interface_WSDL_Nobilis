@@ -42,6 +42,8 @@ public class IntegrityServiceNobilis {
     DerivacionService derivacionService;
 
     public void controlAndPushOrdenIndividual(Derivacion derivacion, String username) throws HttpException, SOAPException, ClientProtocolException, IOException, InterruptedException, ExecutionException, SAXException, ParseException{
+        try{ 
+            
         ArrayList <Orden> ordenesToPersist = this.ordenservice.getOrdenesFromDerivacion(username, derivacion);
         Paciente pacienteToPersist = this.ordenservice.getPacientesNoCargadosFromOrden(ordenesToPersist).get(0);
         CargaPacienteServiceNobilis cargaPacienteServiceNobilis = new CargaPacienteServiceNobilis();
@@ -53,13 +55,12 @@ public class IntegrityServiceNobilis {
  
         cargaPacienteServiceNobilis.soapPacienteServiceNobilis.addChildElementsToXML(pacienteToPersist.getDni().toString(), fechaDeNacimientoFormateada, pacienteToPersist.getGenero().toString(),
                                                                                     pacienteToPersist.getId().toString(), pacienteToPersist.getNombre(), pacienteToPersist.getApellido(),derivacion.getOrigen().getRazonSocial());  
-                                                                                             
+                                                                                            
         ExecutorService executorPaciente = Executors.newSingleThreadExecutor();
         Future<Object[]> future_pacientes = executorPaciente.submit(() -> {
             cargaPacienteServiceNobilis.getSoapPacienteServiceNobilis().getSoapMessage().writeTo(System.out);
             return cargaPacienteServiceNobilis.httpClientWSDL.execute(cargaPacienteServiceNobilis.getSoapPacienteServiceNobilis().getSoapMessage());
         }); 
-        try{
             
                 Object[] responsePacienteService = future_pacientes.get(5, TimeUnit.SECONDS);                                                                                                                                                                                                                        
                 Integer responseCodePaciente = (Integer) responsePacienteService[0]; // mensaje seria: (String)response[1]   

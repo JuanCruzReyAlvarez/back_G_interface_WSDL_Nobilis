@@ -67,7 +67,8 @@ public class OrdenController extends Controller {
             
             String username = this.tokenService.getUsernameAndRolFromJWT(ordenIndividualEncrypted.getToken())[0];
             Origen origen = this.origenService.getOrigenByUsernameUsuario(username);
-            Derivacion derivacion = this.derivacionService.createAndSaveDerivacion("Derivacion Individual", origen);
+            Derivacion derivacion = this.derivacionService.createAndSaveDerivacion(decryptAes.decrypt(ordenIndividualEncrypted.getNombre().getEncryptedData(),ordenIndividualEncrypted.getNombre().getIv())
+                                                                                   ,origen);
             //EstudiosDTO.estudiosDTOToList(decryptAes.decrypt(ordenIndividualEncrypted.getEstudios().getEncryptedData(),ordenIndividualEncrypted.getEstudios().getIv()));
            
             this.ordenservice.createOrdenIndividual(origen,
