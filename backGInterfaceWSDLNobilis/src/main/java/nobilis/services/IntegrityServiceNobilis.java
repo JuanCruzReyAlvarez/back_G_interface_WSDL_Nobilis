@@ -42,18 +42,18 @@ public class IntegrityServiceNobilis {
     DerivacionService derivacionService;
 
     public void controlAndPushOrdenIndividual(Derivacion derivacion, String username) throws HttpException, SOAPException, ClientProtocolException, IOException, InterruptedException, ExecutionException, SAXException, ParseException{
-        try{ 
+        
             
         ArrayList <Orden> ordenesToPersist = this.ordenservice.getOrdenesFromDerivacion(username, derivacion);
         Paciente pacienteToPersist = this.ordenservice.getPacientesNoCargadosFromOrden(ordenesToPersist).get(0);
         CargaPacienteServiceNobilis cargaPacienteServiceNobilis = new CargaPacienteServiceNobilis();
 
-        SimpleDateFormat formatoFechaEntrada = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatoFechaSalida = new SimpleDateFormat("dd/MM/yyyy");
-        Date fecha = formatoFechaEntrada.parse(pacienteToPersist.getFechaNacimiento());
-        String fechaDeNacimientoFormateada = formatoFechaSalida.format(fecha);
+        // SimpleDateFormat formatoFechaEntrada = new SimpleDateFormat("yyyy-MM-dd");
+        // SimpleDateFormat formatoFechaSalida = new SimpleDateFormat("dd/MM/yyyy");
+        // Date fecha = formatoFechaEntrada.parse(pacienteToPersist.getFechaNacimiento());
+        // String fechaDeNacimientoFormateada = formatoFechaSalida.format(fecha);
  
-        cargaPacienteServiceNobilis.soapPacienteServiceNobilis.addChildElementsToXML(pacienteToPersist.getDni().toString(), fechaDeNacimientoFormateada, pacienteToPersist.getGenero().toString(),
+        cargaPacienteServiceNobilis.soapPacienteServiceNobilis.addChildElementsToXML(pacienteToPersist.getDni().toString(), pacienteToPersist.getFechaNacimiento(), pacienteToPersist.getGenero().toString(),
                                                                                     pacienteToPersist.getId().toString(), pacienteToPersist.getNombre(), pacienteToPersist.getApellido(),derivacion.getOrigen().getRazonSocial());  
                                                                                             
         ExecutorService executorPaciente = Executors.newSingleThreadExecutor();
@@ -61,6 +61,8 @@ public class IntegrityServiceNobilis {
             cargaPacienteServiceNobilis.getSoapPacienteServiceNobilis().getSoapMessage().writeTo(System.out);
             return cargaPacienteServiceNobilis.httpClientWSDL.execute(cargaPacienteServiceNobilis.getSoapPacienteServiceNobilis().getSoapMessage());
         }); 
+
+        try{ 
             
                 Object[] responsePacienteService = future_pacientes.get(5, TimeUnit.SECONDS);                                                                                                                                                                                                                        
                 Integer responseCodePaciente = (Integer) responsePacienteService[0]; // mensaje seria: (String)response[1]   
@@ -127,22 +129,34 @@ public void controlAndPushOrdenExcel(Derivacion derivacion, String username) thr
                             throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.FALLO_CARGA_PACIENTE_INDIVIDUAL_NOBILIS + responsePaciente[1]));
                     }
                 }
+
                 this.ordenservice.pacienteRepository.updatePacientesNobilisPersisted(pacientesPersisted);}
+
+                System.out.println("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"); 
 
                 for(Orden orden : ordenesPersisted){
                     CargaOrdenServiceNobilis cargaOrdenServiceNobilis = new CargaOrdenServiceNobilis();
                     cargaOrdenServiceNobilis.soapOrdenServiceNobilis.addChildElementsToXML(orden.getUrgencia(), orden.getId().toString(), orden.getPaciente().getId().toString(),
                                                                                            orden.getEstudios(),orden.getObservaciones(),derivacion.getOrigen().getRazonSocial());
+                                                                                           System.out.println("22222222222222222222222222222222222222222222222222222222222222222222222222222"); 
                     ExecutorService executorOrden = Executors.newSingleThreadExecutor();
+                    System.out.println("3333333333333333333333333333333333333333333333333333333333333333"); 
                     Future<Object[]> future_ordenes = executorOrden.submit(() -> {
                         return cargaOrdenServiceNobilis.httpClientWSDL.execute(cargaOrdenServiceNobilis.getSoapOrdenServiceNobilis().getSoapMessage());
                     });
-                    cargaOrdenServiceNobilis.getSoapOrdenServiceNobilis().getSoapMessage().writeTo(System.out);
+                    System.out.println("444444444444444444444444444444444444444444444444444444444444444444444444444444444444444"); 
+                    // cargaOrdenServiceNobilis.getSoapOrdenServiceNobilis().getSoapMessage().writeTo(System.out); // Da informacion pero se subis muchas ordenes tarda tanto en cargar la data q rompe aca.
+                    System.out.println("55555555555555555555555555555555555555555555555555555555555555555555555555555555555555"); 
                     Object[] responseOrden = future_ordenes.get(5, TimeUnit.SECONDS);
+                    System.out.println("66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666"); 
                     System.out.println((Integer)responseOrden[0]);
+                    System.out.println("7777777777777777777777777777777777777777777777777777777777777777777777777777777777777"); 
                     System.out.println((String) responseOrden[1]);
+                    System.out.println("88888888888888888888888888888888888888888888888888888888888888888888888888888888888"); 
 
                     Integer nobilisInternalCodeResponseOrden = this.getNobilisInternalCode((String) responseOrden[1]);
+
+                    System.out.println("999999999999999999999999999999999999999999999999999999999999999999999999999"); 
 
                     if((Integer)responseOrden[0] != 200 || nobilisInternalCodeResponseOrden != 202){
                         this.derivacionService.deleteDerivacion(this.derivacionService.getDerivacionByID(derivacion.getId()));

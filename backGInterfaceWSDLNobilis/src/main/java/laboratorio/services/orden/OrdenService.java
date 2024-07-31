@@ -64,7 +64,7 @@ public class OrdenService {
 
         Orden orden= new Orden(this.assingValidateAndSavePacientes(Collections.singletonList(new Paciente(Long.parseLong(dni),
                                 nombre, apellido, checkGenero(genero), this.checkDate(fechaDeNacimiento))), origen).get(0), origen, estudiosValidatedAndSaved, observaciones, 
-                                Estado.EN_PROCESO, derivacion, isUrgencia(urgente), new Resultado(), 0);             
+                                Estado.EN_PROCESO, derivacion, isUrgencia(urgente), new Resultado(), 0);            
         return(this.ordenRepository.save(orden));
         }catch(Exception ex){
             throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_GUARDANDO_ORDEN_INDIVIDUAL));   
@@ -107,7 +107,7 @@ public class OrdenService {
         try{
             this.ordenRepository.delete(orden);
         }catch(Exception ex){
-            throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_GUARDANDO_ORDENES));   
+            throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_ELIMINANDO_ORDENES));   
         }
     }
 
@@ -117,7 +117,7 @@ public class OrdenService {
                 this.ordenRepository.delete(orden);
             }
         }catch(Exception ex){
-            throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_GUARDANDO_ORDENES));   
+            throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_ELIMINANDO_ORDENES));   
         }
     }
 
