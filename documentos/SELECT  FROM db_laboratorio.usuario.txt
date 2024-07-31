@@ -1,0 +1,47 @@
+SELECT * FROM db_laboratorio.usuario;
+SELECT * FROM db_laboratorio.origen;
+insert into db_laboratorio.usuario  (id,password,rol,username) values (1,"hola","ADMIN","juan")
+delete from db_laboratorio.usuario where id=2
+
+
+
+SELECT * FROM db_laboratorio.paciente;
+SELECT * FROM db_laboratorio.origen;
+delete from paciente where id= 3
+delete from paciente where id= 5
+
+SELECT * FROM db_laboratorio.orden;
+delete from orden where id= 3
+delete from orden where id= 4
+SET FOREIGN_KEY_CHECKS=0; -- to disable them
+SET FOREIGN_KEY_CHECKS=1; -- to re-enable them
+
+
+SELECT * FROM db_laboratorio.derivacion;
+SELECT * FROM db_laboratorio.origen;
+delete from derivacion where id= 34;
+delete from derivacion where id= 3;
+delete from derivacion where id= 4;
+delete from derivacion where id= 5;
+delete from derivacion where id= 6;
+delete from derivacion where id= 7;
+delete from derivacion where id= 8;
+delete from derivacion where id= 9;
+delete from derivacion where id= 10;
+
+
+SELECT * FROM db_laboratorio.resultado;
+
+INSERT INTO db_laboratorio.resultado (estado,pdf_protocol,orden_id)VALUES ("EN_PROCESO",NULL,57)
+INSERT INTO db_laboratorio.resultado (estado,pdf_protocol,orden_id)VALUES("EN_PROCESO",NULL,57)
+
+
+
+--SET FOREIGN_KEY_CHECKS = 1;
+
+delete from db_laboratorio.resultado where id= 2
+
+UPDATE db_laboratorio.resultado 
+SET pdf_protocol = NULL, 
+    estado = 'EN_PROCESO' 
+WHERE id = 1;
