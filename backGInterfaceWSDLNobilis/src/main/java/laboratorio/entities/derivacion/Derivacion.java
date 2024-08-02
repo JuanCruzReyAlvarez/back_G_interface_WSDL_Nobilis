@@ -64,6 +64,12 @@ public class Derivacion {
         this.nombre = nombre;
         this.fechaEmision = fecha;
     }
+    public Derivacion (Integer id, LocalDate fecha,String nombre, Tipo tipo){
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaEmision = fecha;
+        this.tipo = tipo;
+    }
     public Derivacion(String nombre, Origen origen, Tipo tipo) {
         this.nombre = nombre;
         this.origen = origen;
