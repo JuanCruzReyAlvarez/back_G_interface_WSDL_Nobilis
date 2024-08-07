@@ -130,8 +130,8 @@ public class OrdenService {
                 Row row = sheet.getRow(rowIndex);
                 if(row.getCell(0).toString() != "" ){
                     Paciente paciente = new Paciente(new BigDecimal((row.getCell(0).toString())).longValue(),
-                                        row.getCell(1).toString(),row.getCell(2).toString(),
-                                        this.checkGenero(row.getCell(3).toString()),this.checkDate(convertDate(row.getCell(4).toString()))); 
+                                        row.getCell(1).toString().toLowerCase(),row.getCell(2).toString().toLowerCase(),
+                                        this.checkGenero(row.getCell(3).toString().toUpperCase()),this.checkDate(convertDate(row.getCell(4).toString()))); 
                     pacientes.add(paciente);
                     }
                 }
@@ -152,7 +152,7 @@ public class OrdenService {
                     if(row.getCell(0).toString() != "" ){
                         List<Estudio> estudiosValidatedAndSaved = this.assingValidateAndSaveEstudios(EstudiosDTO.estudiosDTOToList((row.getCell(5).toString())));/////////////////nuevooo
                         Orden orden = new Orden(pacientesGuardados.get(numPaciente), origen,estudiosValidatedAndSaved , 
-                                                row.getCell(6).toString(), Estado.EN_PROCESO, derivacion, isUrgencia(row.getCell(7).toString()), new Resultado(), 0);
+                                                row.getCell(6).toString(), Estado.EN_PROCESO, derivacion, isUrgencia(row.getCell(7).toString().toUpperCase()), new Resultado(), 0);
 
                         ordenes.add(orden); numPaciente = numPaciente + 1; 
                         } }
