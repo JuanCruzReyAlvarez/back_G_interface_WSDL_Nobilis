@@ -29,9 +29,9 @@ public class Server implements SparkApplication {
         private final String IP = "0.0.0.0";
 
 
-        //private final String SSL_KEY_FILE = "/home/portal/public_html/certs/ssl.key";
-        //private final String SSL_CERT_FILE = "/home/portal/public_html/certs/ssl.cert";
-        //private final String jksFilePath = "/home/portal/public_html/be/interfaceWebMindBeat/back_G_interface_WSDL_Nobilis/backGInterfaceWSDLNobilis/src/main/java/laboratorio/keystore.jks";
+        private final String SSL_KEY_FILE = "/home/portal/public_html/certs/ssl.key";
+        private final String SSL_CERT_FILE = "/home/portal/public_html/certs/ssl.cert";
+        private final String jksFilePath = "/home/portal/public_html/be/interfaceWebMindBeat/back_G_interface_WSDL_Nobilis/backGInterfaceWSDLNobilis/src/main/java/laboratorio/keystore.jks";
 
 
         //private final String SSL_KEY_FILE = "C:/Users/JuanUTN/back_G_interface_WSDL_Nobilis/backGInterfaceWSDLNobilis/src/main/java/laboratorio/ssl.key";
@@ -45,11 +45,11 @@ public class Server implements SparkApplication {
             http.setip(IP);
             PemKeyToJKS pemKeyToJKS = new PemKeyToJKS();
             try {
-                //pemKeyToJKS.convert(SSL_CERT_FILE, SSL_KEY_FILE, "labCordobaHttps1234",jksFilePath);
+                pemKeyToJKS.convert(SSL_CERT_FILE, SSL_KEY_FILE, "labCordobaHttps1234",jksFilePath);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //http.secure(jksFilePath, "labCordobaHttps1234");
+            http.secure(jksFilePath, "labCordobaHttps1234");
             IController[] controllers = registerControllers(); 
 
             http.setPort(PORT)
