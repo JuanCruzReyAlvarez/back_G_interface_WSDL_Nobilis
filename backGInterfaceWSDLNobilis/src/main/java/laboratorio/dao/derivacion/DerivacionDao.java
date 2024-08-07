@@ -24,7 +24,7 @@ public class DerivacionDao extends Dao<Derivacion>{
         EntityManager entityManager = EntityManagerHelper.getEntityManager();
         entityManager.clear();
         entityManager.getTransaction().begin();
-        String jpqlQuery = "SELECT NEW Derivacion( d.id, d.fechaEmision, d.nombre ) FROM Derivacion d WHERE d.origen.id = :origen_id";
+        String jpqlQuery = "SELECT NEW Derivacion( d.id, d.fechaEmision, d.nombre, d.tipo) FROM Derivacion d WHERE d.origen.id = :origen_id";
         TypedQuery<Derivacion> query = entityManager.createQuery(jpqlQuery, Derivacion.class);
         query.setParameter("origen_id", origen_id);
         List<Derivacion> resultList = query.getResultList();

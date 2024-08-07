@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import laboratorio.entities.derivacion.Derivacion;
+import laboratorio.entities.derivacion.Tipo;
 import laboratorio.entities.orden.Orden;
 import laboratorio.entities.origen.Origen;
 import laboratorio.http.dto.admin.fields.IDDerivacionDTO;
 import laboratorio.http.dto.derivacion.DerivacionEncryptedDTO;
 import laboratorio.http.dto.derivacion.fields.FechaEmisionDerivacionDTO;
 import laboratorio.http.dto.derivacion.fields.NombreDerivacionDTO;
+import laboratorio.http.dto.derivacion.fields.TipoDerivacionDTO;
 import laboratorio.http.exceptions.BadResquestException;
 import laboratorio.http.exceptions.HttpException;
 import laboratorio.http.exceptions.MessageException;
@@ -57,8 +59,8 @@ public class DerivacionService {
         } 
     }
 
-    public Derivacion createAndSaveDerivacion(String nombreExcel, Origen origen){
-        return this.derivacionRepository.save(new Derivacion(nombreExcel, origen));
+    public Derivacion createAndSaveDerivacion(String nombreExcel, Origen origen, Tipo tipo){
+        return this.derivacionRepository.save(new Derivacion(nombreExcel, origen, tipo));
     }
 
     public void createAndSaveDerivacion(Orden orden, String nombreExcel){
@@ -77,15 +79,22 @@ public class DerivacionService {
 
     public DerivacionEncryptedDTO encryptDerivacion(Derivacion derivacion) throws HttpException {
         try {
-            EncrtptAES<NombreDerivacionDTO> AESNombreDerivacion = new EncrtptAES<NombreDerivacionDTO>();
             DerivacionEncryptedDTO derivacionEncryptedDTO   = new DerivacionEncryptedDTO();  
 
-            derivacionEncryptedDTO.setNombre(AESNombreDerivacion.encrypt(derivacion.getNombre(),derivacionEncryptedDTO.getNombre()));    
-            EncrtptAES<FechaEmisionDerivacionDTO> AESFechaEmisionDerivacion = new EncrtptAES<FechaEmisionDerivacionDTO>(); 
+            EncrtptAES<NombreDerivacionDTO> AESNombreDerivacion = new EncrtptAES<NombreDerivacionDTO>();
+            derivacionEncryptedDTO.setNombre(AESNombreDerivacion.encrypt(derivacion.getNombre(),derivacionEncryptedDTO.getNombre())); 
+
+            EncrtptAES<FechaEmisionDerivacionDTO> AESFechaEmisionDerivacion = new EncrtptAES<FechaEmisionDerivacionDTO>();
+            derivacionEncryptedDTO.setFechaEmision(AESFechaEmisionDerivacion.encrypt(derivacion.getFechaEmision().toString(), derivacionEncryptedDTO.getFechaEmision())); 
+
+             
+            EncrtptAES<TipoDerivacionDTO> AESTipoDerivacion = new EncrtptAES<TipoDerivacionDTO>(); 
+            derivacionEncryptedDTO.setTipo(AESTipoDerivacion.encrypt(derivacion.getTipo().toString(),derivacionEncryptedDTO.getTipo()));   
             
-            derivacionEncryptedDTO.setFechaEmision(AESFechaEmisionDerivacion.encrypt(derivacion.getFechaEmision().toString(), derivacionEncryptedDTO.getFechaEmision()));    
+                
             EncrtptAES<IDDerivacionDTO> AESIDDerivacion = new EncrtptAES<IDDerivacionDTO>();
             derivacionEncryptedDTO.setId(AESIDDerivacion.encrypt(derivacion.getId().toString(), derivacionEncryptedDTO.getId()));  
+            
             return derivacionEncryptedDTO;
             }catch (Exception ex) {
                 throw new BadResquestException(Collections.singletonMap(MessageException.FIELD_NAME, MessageException.ERROR_ENCRIPTACION_EXTERNA));

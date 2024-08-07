@@ -50,6 +50,7 @@ public class MessageException {
     public static final String ERROR_ORDEN_GENERO = "Error en la sintaxis esperada del Genero"; 
     public static final String ERROR_ORDEN_URGENCIA = "Error en la sintaxis esperada de la urgencia de la Orden";  
     public static final String ERROR_EN_EL_FORMATO_DE_LA_FECHA_DEL_EXCEL = "La fecha de Nacimiento de un paciente en el Excel, no cumple con el formato: DD/MM/AAAA.";
+    public static final String ERROR_EN_EL_CORRECTOR_AUTOMATICO_DE_FECHA = "El corrector automatico de fechas fallo.";
     public static final String ERROR_ACTUALIZANDO_FLAGS = "Error actualizando Flags de descarga en la Base de Datos.";
     public static final String ERROR_SINTAXIS_ID_ORDENES = "La Sintaxis de los ID de las ordenes enviados es incorrecta.";
     public static final String ERROR_CODIGO_DE_CARGA_DE_PACIENTE_INCORRECTO = "El codigo interno de Nobilis para la carga de paciente no fue exitoso, se eleimina la derivacion completa para mantener derivacion"; 
