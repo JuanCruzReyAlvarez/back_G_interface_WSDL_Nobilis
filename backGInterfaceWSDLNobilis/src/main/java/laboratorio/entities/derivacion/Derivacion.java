@@ -74,6 +74,7 @@ public class Derivacion {
         this.nombre = nombre;
         this.origen = origen;
         this.tipo = tipo;
+        this.fechaEmision = LocalDate.now();
     }
     public Derivacion (){}
 
