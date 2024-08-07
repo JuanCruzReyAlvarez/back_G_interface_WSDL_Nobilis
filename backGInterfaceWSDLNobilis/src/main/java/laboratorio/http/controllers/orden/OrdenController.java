@@ -1,6 +1,7 @@
 package laboratorio.http.controllers.orden;
 
 import laboratorio.entities.derivacion.Derivacion;
+import laboratorio.entities.derivacion.Tipo;
 import laboratorio.entities.origen.Origen;
 import laboratorio.http.controllers.Controller;
 import laboratorio.http.dto.derivacion.DerivacionesDTO;
@@ -67,7 +68,8 @@ public class OrdenController extends Controller {
             
             String username = this.tokenService.getUsernameAndRolFromJWT(ordenIndividualEncrypted.getToken())[0];
             Origen origen = this.origenService.getOrigenByUsernameUsuario(username);
-            Derivacion derivacion = this.derivacionService.createAndSaveDerivacion("Derivacion Individual", origen);
+            Derivacion derivacion = this.derivacionService.createAndSaveDerivacion(decryptAes.decrypt(ordenIndividualEncrypted.getNombre().getEncryptedData(),ordenIndividualEncrypted.getNombre().getIv())
+                                                                                   ,origen, Tipo.INDIVIDUAL);
             //EstudiosDTO.estudiosDTOToList(decryptAes.decrypt(ordenIndividualEncrypted.getEstudios().getEncryptedData(),ordenIndividualEncrypted.getEstudios().getIv()));
            
             this.ordenservice.createOrdenIndividual(origen,
@@ -100,7 +102,7 @@ public class OrdenController extends Controller {
             Sheet sheet = workbook.getSheetAt(0); // Primera hoja del libro.
 
             Origen origen = this.origenService.getOrigenByUsernameUsuario(this.tokenService.getUsernameAndRolFromJWT(request.headers("token"))[0]);
-            Derivacion derivacion = this.derivacionService.createAndSaveDerivacion(request.headers("excelName"), origen);
+            Derivacion derivacion = this.derivacionService.createAndSaveDerivacion(request.headers("excelName"), origen, Tipo.LOTE);
             String username = this.tokenService.getUsernameAndRolFromJWT(request.headers("token"))[0];
 
             this.ordenservice.createPacientesAndOrdenes(sheet, derivacion, origen, this.integrityServiceNobilis, username);

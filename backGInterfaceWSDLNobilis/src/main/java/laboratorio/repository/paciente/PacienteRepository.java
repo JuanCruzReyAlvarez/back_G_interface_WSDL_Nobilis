@@ -33,10 +33,6 @@ public class PacienteRepository {
         return this.dao.save(paciente);
     }
 
-    public void saveAll(List<Paciente> pacientes) {
-        this.dao.saveAll(pacientes);
-    }
-
     public void update(Paciente paciente) {
         this.dao.update(paciente);
     }

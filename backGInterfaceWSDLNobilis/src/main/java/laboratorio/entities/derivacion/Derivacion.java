@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -39,6 +41,9 @@ public class Derivacion {
     @JoinColumn(name = "origen_id")
     @Setter @Getter public Origen origen;
 
+    @Enumerated(value = EnumType.STRING)
+    @Setter @Getter public Tipo tipo;
+
     public Derivacion (String nombre, List<Orden> ordenes, Origen origen){
         this.nombre = nombre;
         this.ordenes = ordenes;
@@ -59,5 +64,17 @@ public class Derivacion {
         this.nombre = nombre;
         this.fechaEmision = fecha;
     }
+    public Derivacion (Integer id, LocalDate fecha,String nombre, Tipo tipo){
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaEmision = fecha;
+        this.tipo = tipo;
+    }
+    public Derivacion(String nombre, Origen origen, Tipo tipo) {
+        this.nombre = nombre;
+        this.origen = origen;
+        this.tipo = tipo;
+    }
     public Derivacion (){}
+
 } 
